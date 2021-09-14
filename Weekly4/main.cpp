@@ -10,6 +10,7 @@ using std::endl;
 using std::vector;
 
 void ClearCin();
+std::mt19937 mersenne{ static_cast<std::mt19937::result_type>(std::time(nullptr)) };
 
 //calulator prototypes
 void Calculator();
@@ -30,6 +31,8 @@ int main() {
 		cout << "Main Menu" << endl;
 		cout << "1. Calculator" << endl;
 		cout << "2. 10x10 grid" << endl;
+		cout << "3. Acocunts" << endl;
+		cout << "q. Exit" << endl;
 
 		char input{};
 		cin >> input;
@@ -43,6 +46,13 @@ int main() {
 
 		case '2':
 			GridGame();
+			break;
+
+		case '3':
+			break;
+
+		case'q':
+			exit(0);
 			break;
 
 		default:
@@ -62,7 +72,8 @@ void ClearCin() {
 
 
 void Calculator() {
-	while (true)
+	bool exit = false;
+	while (exit == false)
 	{
 		system("cls");
 		cout << "Calculator" << endl;
@@ -113,29 +124,53 @@ void Calculator() {
 
 		cout << endl << "Result : " << answer << endl;
 		system("pause");
+
+		while (true)
+		{
+			system("cls");
+			cout << "Return to meny? y/n" << endl;
+			char ans{};
+			cin >> ans;
+			ClearCin();
+			if ('y' == tolower(ans))
+			{
+				exit = true;
+				break;
+			}
+			else if ('n' == tolower(ans))
+			{
+				break;
+			}
+		}
 	}
 }
 
 int GenerateRandomInt() {
-	std::mt19937 mersenne{ static_cast<std::mt19937::result_type>(std::time(nullptr)) };
 	std::uniform_int_distribution<> die{ 0, 9 };
 	return die(mersenne);
 }
 vector<int> StartPos() {
-	cout << "Do you want a random staring position? (defualt (0, 0))" << endl;
-	cout << "input y/n : ";
-	char input{};
-	cin >> input;
-	if (tolower(input) == 'y')
+	while (true) // runs until i break it
 	{
-		int x = GenerateRandomInt();
-		int y = GenerateRandomInt();
+		system("cls");
+		cout << "Do you want a random staring position? (defualt (0, 0))" << endl;
+		cout << "input y/n : ";
+		char input{};
+		cin >> input;
+		ClearCin();
+		if (tolower(input) == 'y')
+		{
+			int x = GenerateRandomInt();
+			int y = GenerateRandomInt();
 
-		return { y,x };
-	}
-	else if (tolower(input) == 'n')
-	{
-		return { 0,0 };
+			return { y,x };
+			
+		}
+		else if (tolower(input) == 'n')
+		{
+			return { 0,0 };
+			
+		}
 	}
 }
 void Input(vector<int>& a_move, char a_activeTile) {
@@ -154,7 +189,6 @@ void Input(vector<int>& a_move, char a_activeTile) {
 			a_move = { 1, 0 };
 			break;
 		}
-
 
 		//move logic if no special tiles active
 		char ans = _getch();
@@ -183,6 +217,7 @@ void Input(vector<int>& a_move, char a_activeTile) {
 	}
 }
 void DrawBoard(vector<vector<char>> a_grid) {
+	cout << "______________________" << endl;
 	for (int i = 0; i < a_grid.size(); i++)
 	{
 		cout << "| ";
@@ -200,11 +235,12 @@ void DrawBoard(vector<vector<char>> a_grid) {
 
 		cout << " |" << endl;
 	}
+	cout << "|_____________________|" << endl;
 }
 void GridGame() {
 	int size = 10;
-	vector<int> startPos = { 0,0 }; // y, x 
-	vector<int> pos = { 0,0 };
+	vector<int> startPos = StartPos(); 
+	vector<int> pos = { 0,0 };	// y, x 
 	pos = startPos;
 	vector<int> move = { 1,0 };
 
@@ -222,9 +258,15 @@ void GridGame() {
 		}
 	}
 
+	//places spacialTiles
+	//go down tile
 	grid[3][2] = '/';
 
+	//go up tile
 	grid[7][8] = '\\';
+
+	grid[5][9] = 'G';
+
 
 
 
@@ -240,6 +282,10 @@ void GridGame() {
 		system("cls");
 		DrawBoard(grid);
 		cout << endl << activeTile;
+
+
+
+
 
 		//removes last space
 		grid[pos[0]] [pos[1]] = activeTile;
@@ -257,9 +303,15 @@ void GridGame() {
 		activeTile = grid[pos[0]][pos[1]];
 		grid[pos[0]][pos[1]] = 'x';
 
-		
-		//system("pause");
 
+		//checks if victory condition is met
+		if (activeTile == 'G')
+		{
+			system("cls");
+			DrawBoard(grid);
+			cout << endl << "Game Finished!";
+			exit(0);
+		}
 	}
 
 }
