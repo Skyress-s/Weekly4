@@ -10,17 +10,55 @@ using std::endl;
 using std::vector;
 using std::string;
 
+//classes
+struct Account {
+	string name{};
+	int number{};
+};
+
+struct Dice {
+	int value{};
+	bool isHeld{ false };
+
+	void ToogleIsHeld() {
+		if (isHeld) {
+			isHeld = false;
+		}
+		else {
+			isHeld = true;
+		}
+	}
+};
+
+
+
 void ClearCin();
 void Spacing(int pos, int);
 std::mt19937 mersenne{ static_cast<std::mt19937::result_type>(std::time(nullptr)) };
 
 //calulator prototypes
 void Calculator();
+
+//Grid game
+void DrawBoard(vector<vector<char>>);
+void Input(vector<int>&, char);
+vector<int> StartPos();
+int GenerateRandomInt(int from, int to);
 void GridGame();
 
 //accounts task
 void AccountTask();
 
+//Dice task
+vector<Dice> Roll(vector<Dice>);
+void PrintDices(vector<Dice>);
+int FromCharToInt(char);
+int HowMany6Dice(vector<Dice>);
+void NumOfPairs(vector<Dice>);
+void DiceTask();
+
+
+//main
 int main() {
 	while (true)
 	{
@@ -29,6 +67,7 @@ int main() {
 		cout << "1. Calculator" << endl;
 		cout << "2. 10x10 grid" << endl;
 		cout << "3. Acocunts" << endl;
+		cout << "4. Dice" << endl;
 		cout << "q. Exit" << endl;
 
 		char input{};
@@ -49,6 +88,10 @@ int main() {
 			AccountTask();
 			break;
 
+		case '4':
+			DiceTask();
+			break;
+
 		case'q':
 			exit(0);
 			break;
@@ -62,10 +105,12 @@ int main() {
 	return 0;
 }
 
+
 void ClearCin() {
 	std::cin.clear();				//Clears eventual errors from buffer
 	std::cin.ignore(32767, '\n');	//clears the buffer if anything is there
 }
+
 void Spacing(int pos, int spaceTaken) {
 	for (int i = 0; i < pos - spaceTaken; i++)
 	{
@@ -73,7 +118,8 @@ void Spacing(int pos, int spaceTaken) {
 	}
 }
 
-//task 1
+
+//task 1 --------------------------------------------------------------------
 void Calculator() {
 	bool exit = false;
 	while (exit == false)
@@ -148,11 +194,13 @@ void Calculator() {
 	}
 }
 
-//task 2
-int GenerateRandomInt() {
-	std::uniform_int_distribution<> die{ 0, 9 };
+
+//task 2 --------------------------------------------------------------------
+int GenerateRandomInt(int from, int to) {
+	std::uniform_int_distribution<> die{ from, to };
 	return die(mersenne);
 }
+
 vector<int> StartPos() {
 	while (true) // runs until i break it
 	{
@@ -164,8 +212,8 @@ vector<int> StartPos() {
 		ClearCin();
 		if (tolower(input) == 'y')
 		{
-			int x = GenerateRandomInt();
-			int y = GenerateRandomInt();
+			int x = GenerateRandomInt(0, 9);
+			int y = GenerateRandomInt(0, 9);
 
 			return { y,x };
 			
@@ -177,6 +225,7 @@ vector<int> StartPos() {
 		}
 	}
 }
+
 void Input(vector<int>& a_move, char a_activeTile) {
 	bool exit = false;
 	while (exit == false)
@@ -220,6 +269,7 @@ void Input(vector<int>& a_move, char a_activeTile) {
 		}
 	}
 }
+
 void DrawBoard(vector<vector<char>> a_grid) {
 	cout << "______________________" << endl;
 	for (int i = 0; i < a_grid.size(); i++)
@@ -241,6 +291,7 @@ void DrawBoard(vector<vector<char>> a_grid) {
 	}
 	cout << "|_____________________|" << endl;
 }
+
 void GridGame() {
 	int size = 10;
 	vector<int> startPos = StartPos(); 
@@ -320,23 +371,22 @@ void GridGame() {
 
 }
 
-//task 3
-struct Account {
-	string name{};
-	int number{};
-};
 
+//task 3 --------------------------------------------------------------------
 void AccountTask() {
 	int maxPersons = 10;
 	vector<Account> accounts{};
 	//input accounts
 	while (true)
 	{
+		system("cls");
 		Account temp{};
 		cout << "Name : ";
 		cin >> temp.name;
+		ClearCin();
 		cout << "Number : ";
 		cin >> temp.number;
+		ClearCin();
 
 		accounts.push_back(temp);
 
@@ -350,6 +400,7 @@ void AccountTask() {
 		cout << "add new account y/n : ";
 		char ans{};
 		cin >> ans;
+		ClearCin();
 		if (ans == 'n')
 		{
 			break;
@@ -357,7 +408,8 @@ void AccountTask() {
 	}
 
 	//print
-	
+	system("cls");
+	cout << "Accounts added : " << endl;
 	for (int i = 0; i < accounts.size(); i++)
 	{
 		cout << " | name : " << accounts[i].name;
@@ -368,3 +420,115 @@ void AccountTask() {
 }
 
 
+//task 4 / dice task --------------------------------------------------------
+
+vector<Dice> Roll(vector<Dice> a_dices) {
+	for (int i = 0; i < a_dices.size(); i++)
+	{
+		if (!a_dices[i].isHeld)
+		{
+			a_dices[i].value = GenerateRandomInt(1, 6);
+		}
+	}
+	return a_dices;
+}
+
+void PrintDices(vector<Dice> a_dices) {
+	for (int i = 0; i < a_dices.size(); i++)
+	{
+		cout << "dice " << i + 1 << " : " << a_dices[i].value;
+		if (a_dices[i].isHeld)
+		{
+			cout << " *HELD";
+		}
+		cout << endl;
+	}
+}
+
+int FromCharToInt(char ch) {
+	int result = ch - '0';
+	return result;
+}
+
+int HowMany6Dice(vector<Dice> a_dice) {
+	int result{};
+	for (int i = 0; i < a_dice.size(); i++)
+	{
+		if (a_dice[i].value == 6)
+		{
+			result++;
+		}
+	}
+	return result;
+}
+
+void NumOfPairs(vector<Dice> a_dices) {
+	for (int i = 0; i < 6; i++)
+	{
+		int pair{};
+		for (int j = 0; j < a_dices.size(); j++)
+		{
+			if (a_dices[j].value == i + 1)
+			{
+				pair++;
+			}
+		}
+		if (pair%2 == 0 && pair > 0) // the task asked for ONLY pairs so we only print if there is exaclty two equal dice
+		{
+			cout << "There are : " << pair/2 << " " << i + 1 << "pairs" << endl;
+
+		}
+
+	}
+}
+
+void DiceTask() {
+	vector<Dice> dices(5);
+	PrintDices(dices);
+	bool finished{};
+	while (!finished)
+	{
+		
+		system("cls");
+		dices = Roll(dices);
+		PrintDices(dices);
+		cout << endl << HowMany6Dice(dices) << " | 6 sides have been rolled. " << endl;
+		cout << endl;
+		NumOfPairs(dices);
+		cout << endl;
+		cout << endl;
+
+
+		cout << "1-6. Which dice to hold?" << endl;
+		cout << "h. to stop rolling" << endl;
+		cout << "g. continue" << endl;
+		char ans{};
+		cin >> ans;
+		ClearCin();
+		int intAns = FromCharToInt(ans);
+
+		if (intAns >= 1 && intAns <= 5)
+		{
+			dices[intAns - 1].ToogleIsHeld();
+		}
+		else if (ans == 'h')
+		{
+			finished = true;
+			break;
+		}
+		else if (ans == 'g')
+		{
+			
+		}
+		else
+		{
+			system("cls");
+			cout << "Invalid answer, please choose again!"<< endl;
+			system("pause");
+		}
+		
+		
+		
+
+	}
+}
