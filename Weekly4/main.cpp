@@ -8,23 +8,20 @@ using std::cout;
 using std::cin;
 using std::endl;
 using std::vector;
+using std::string;
 
 void ClearCin();
+void Spacing(int pos, int);
 std::mt19937 mersenne{ static_cast<std::mt19937::result_type>(std::time(nullptr)) };
 
 //calulator prototypes
 void Calculator();
 void GridGame();
 
+//accounts task
+void AccountTask();
+
 int main() {
-	
-	
-		
-		
-
-		 
-	
-
 	while (true)
 	{
 		system("cls");
@@ -49,6 +46,7 @@ int main() {
 			break;
 
 		case '3':
+			AccountTask();
 			break;
 
 		case'q':
@@ -68,7 +66,12 @@ void ClearCin() {
 	std::cin.clear();				//Clears eventual errors from buffer
 	std::cin.ignore(32767, '\n');	//clears the buffer if anything is there
 }
-
+void Spacing(int pos, int spaceTaken) {
+	for (int i = 0; i < pos - spaceTaken; i++)
+	{
+		cout << ' ';
+	}
+}
 
 //task 1
 void Calculator() {
@@ -315,6 +318,53 @@ void GridGame() {
 		}
 	}
 
+}
+
+//task 3
+struct Account {
+	string name{};
+	int number{};
+};
+
+void AccountTask() {
+	int maxPersons = 10;
+	vector<Account> accounts{};
+	//input accounts
+	while (true)
+	{
+		Account temp{};
+		cout << "Name : ";
+		cin >> temp.name;
+		cout << "Number : ";
+		cin >> temp.number;
+
+		accounts.push_back(temp);
+
+
+		//ensures that the loop exits if the vector has 10 elements
+		if (accounts.size() >= 10 ){
+			break;
+		}
+
+		//ask if you want to add another account
+		cout << "add new account y/n : ";
+		char ans{};
+		cin >> ans;
+		if (ans == 'n')
+		{
+			break;
+		}
+	}
+
+	//print
+	
+	for (int i = 0; i < accounts.size(); i++)
+	{
+		cout << " | name : " << accounts[i].name;
+		Spacing(12, accounts[i].name.size());
+		cout << " | Number : " << accounts[i].number << endl;
+	}
+	system("pause");
 }
 
 
