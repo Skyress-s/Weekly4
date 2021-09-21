@@ -70,7 +70,7 @@ void ClearCin() {
 }
 
 
-
+//task 1
 void Calculator() {
 	bool exit = false;
 	while (exit == false)
@@ -145,6 +145,7 @@ void Calculator() {
 	}
 }
 
+//task 2
 int GenerateRandomInt() {
 	std::uniform_int_distribution<> die{ 0, 9 };
 	return die(mersenne);
@@ -315,3 +316,5 @@ void GridGame() {
 	}
 
 }
+
+
