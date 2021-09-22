@@ -390,9 +390,10 @@ void AccountTask() {
 
 		accounts.push_back(temp);
 
+		
 
 		//ensures that the loop exits if the vector has 10 elements
-		if (accounts.size() >= 10 ){
+		if (accounts.size() >= 10 ) {
 			break;
 		}
 
@@ -401,8 +402,9 @@ void AccountTask() {
 		char ans{};
 		cin >> ans;
 		ClearCin();
-		if (ans == 'n')
-		{
+
+		
+		if (ans == 'n') {
 			break;
 		}
 	}
@@ -410,12 +412,13 @@ void AccountTask() {
 	//print
 	system("cls");
 	cout << "Accounts added : " << endl;
-	for (int i = 0; i < accounts.size(); i++)
-	{
+	for (int i = 0; i < accounts.size(); i++) {
+
 		cout << " | name : " << accounts[i].name;
 		Spacing(12, accounts[i].name.size());
 		cout << " | Number : " << accounts[i].number << endl;
 	}
+
 	system("pause");
 }
 
