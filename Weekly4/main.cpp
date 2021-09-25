@@ -121,9 +121,12 @@ void Spacing(int pos, int spaceTaken) {
 
 //task 1 --------------------------------------------------------------------
 void Calculator() {
-	bool exit = false;
-	while (exit == false)
+	bool returnToMenu = false;
+	while (returnToMenu == false)
 	{
+		int answer{};
+		bool acceptedAns{ false };
+
 		system("cls");
 		cout << "Calculator" << endl;
 		int input1{};
@@ -137,38 +140,45 @@ void Calculator() {
 		cout << " Number 2 : ";
 		cin >> input2;
 
-		
-		cout << "What operation do you want to do?" << endl;
-		cout << "a. Addition" << endl;
-		cout << "s. Subtract" << endl;
-		cout << "m. Multiply" << endl;
-		cout << "d. Divide" << endl;
+		while (!acceptedAns) {
+			system("cls");
+			cout << "input 1 : " << input1 << endl;
+			cout << "input 2 : " << input2 << endl << endl;
+			cout << "What operation do you want to do?" << endl;
+			cout << "a. Addition" << endl;
+			cout << "s. Subtract" << endl;
+			cout << "m. Multiply" << endl;
+			cout << "d. Divide" << endl;
 
-		char operation{};
-		cin >> operation;
-		ClearCin();
+			char operation{};
+			cin >> operation;
+			ClearCin();
 
-		int answer{};
-		switch (operation)
-		{
-		case 'a':
-			answer = input1 + input2;
-			break;
+			acceptedAns = true;
 
-		case 's':
-			answer = input1 - input2;
-			break;
+			switch (operation)
+			{
+			case 'a':
+				answer = input1 + input2;
+				break;
 
-		case 'm':
-			answer = input1 * input2;
-			break;
-		case 'd':
-			answer = input1 / input2;
-			break;
+			case 's':
+				answer = input1 - input2;
+				break;
+
+			case 'm':
+				answer = input1 * input2;
+				break;
+			case 'd':
+				answer = input1 / input2;
+				break;
 
 
-		default:
-			break;
+			default:
+
+				acceptedAns = false;
+				break;
+			}
 		}
 
 		cout << endl << "Result : " << answer << endl;
@@ -183,7 +193,7 @@ void Calculator() {
 			ClearCin();
 			if ('y' == tolower(ans))
 			{
-				exit = true;
+				returnToMenu = true;
 				break;
 			}
 			else if ('n' == tolower(ans))
